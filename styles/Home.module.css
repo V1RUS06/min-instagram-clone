@@ -18,8 +18,14 @@
   border-radius: 8px;
   border: 1px solid black;
   overflow-y: scroll;
-  gap: 5px
+  gap: 5px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+.flex_container::-webkit-scrollbar {
+  display: none;
+}
+
 .card {
   width: calc(33.33% - 5px);
   cursor: pointer;

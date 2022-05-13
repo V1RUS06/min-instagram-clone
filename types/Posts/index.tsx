@@ -17,6 +17,8 @@ export enum PostsActionType {
   FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS',
   FETCH_POSTS_ERROR = 'FETCH_POSTS_ERROR',
   SET_TOTAL_PAGES = 'SET_TOTAL_PAGES',
+  SET_POSTS = 'SET_POSTS',
+
 }
 
 interface FetchPostsAction {
@@ -37,11 +39,17 @@ interface FetchPostsErrorAction {
 
 interface SetTotalPagesAction {
   type: PostsActionType.SET_TOTAL_PAGES
-  payload:  string
+  payload:  string | null
+}
+
+interface SetPostsAction {
+  type: PostsActionType.SET_POSTS
+  payload: CardData[]
 }
 
 export type PostsAction =
   FetchPostsAction |
   FetchPostsSuccessAction |
   FetchPostsErrorAction |
-  SetTotalPagesAction
+  SetTotalPagesAction |
+  SetPostsAction

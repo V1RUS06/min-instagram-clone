@@ -11,10 +11,16 @@ export const postsReducer = (state = initialState, action: PostsAction): PostsSt
   switch (action.type) {
     case PostsActionType.FETCH_POSTS:
       return {...state, loading: true }
+
+    case PostsActionType.SET_POSTS:
+      return {...state, posts: action.payload }
+
     case PostsActionType.FETCH_POSTS_SUCCESS:
       return {...state, posts: [...state.posts, ...action.payload], loading: false}
+
     case PostsActionType.FETCH_POSTS_ERROR:
       return {...state, error: action.payload, loading: false}
+
     case PostsActionType.SET_TOTAL_PAGES:
       return {...state, totalPages: action.payload}
 
