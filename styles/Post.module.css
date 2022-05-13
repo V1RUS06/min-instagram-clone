@@ -11,7 +11,12 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-
+  position: relative;
+  width: 100%;
+}
+.header a {
+  position: absolute;
+  left: 20px;
 }
 .comments_container{
   display: flex;

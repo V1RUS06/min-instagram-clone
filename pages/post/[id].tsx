@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import styles from './Post.module.css'
+import styles from '../../styles/Post.module.css'
 import {GetServerSideProps} from "next";
 import {PostProps, PostComments} from "../../types/Post";
 import Link from "next/link";
@@ -15,12 +15,11 @@ export default function Post({comments, post}: Props) {
 
   const router = useRouter();
 
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <Link href={"/"}><a><LeftArrow /></a></Link>
-        <h1>Post номер {router.query.id}</h1>
+        <h1>Пост номер {router.query.id}</h1>
       </div>
       <div className={styles.comments_container}>
         <img className={styles.post_img} src={`${post.url}`} alt={`img${post.id}`}/>
@@ -35,11 +34,6 @@ export default function Post({comments, post}: Props) {
       </div>
     </div>
   )
-}
-interface ServerProps {
-  params: {
-    id: number | string
-  }
 }
 
 export const getServerSideProps: GetServerSideProps = async ({params}) => {

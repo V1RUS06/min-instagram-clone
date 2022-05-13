@@ -10,10 +10,11 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useActions} from "../hooks/useAction";
 
 interface Props {
-  serverPosts: CardData[]
+  serverPosts: CardData[],
+  pages: string | null
 }
 
-const Posts:NextPage<Props> = ({serverPosts}) => {
+const Posts:NextPage<Props> = ({serverPosts, pages}) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [fetching, setFetching] = useState<boolean>(false);
   const dispatch: Dispatch<PostsAction> = useDispatch();
@@ -47,9 +48,12 @@ const Posts:NextPage<Props> = ({serverPosts}) => {
 
   const scrollHandler = useCallback((e: React.UIEvent<HTMLDivElement>) => {
 
-    if ((e.currentTarget.scrollHeight - (e.currentTarget.scrollTop + window.innerHeight - 100)) < 100 && !fetching && !loading && totalPages ? posts.length < +totalPages : null) {
-      setFetching(true)
+    if (pages){
+      if ((e.currentTarget.scrollHeight - (e.currentTarget.scrollTop + window.innerHeight - 100)) < 100 && !fetching && !loading && posts.length < +pages) {
+        setFetching(true)
+      }
     }
+
   },[fetching, loading])
 
   return (
@@ -84,8 +88,10 @@ export const getStaticProps: GetStaticProps = async (context ) =>  {
 
   const response = await fetch(`https://jsonplaceholder.typicode.com/photos?_limit=21&_page=1`)
   const serverPosts = await response.json()
+  const pages = response.headers.get('x-total-count');
+
 
   return {
-    props: {serverPosts}
+    props: {serverPosts, pages}
   }
 }

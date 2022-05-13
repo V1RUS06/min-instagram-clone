@@ -22,7 +22,7 @@ export const postsReducer = (state = initialState, action: PostsAction): PostsSt
       return {...state, error: action.payload, loading: false}
 
     case PostsActionType.SET_TOTAL_PAGES:
-      return {...state, totalPages: action.payload}
+      return {...state, totalPages: action.payload, loading: false}
 
     default:
       return state
