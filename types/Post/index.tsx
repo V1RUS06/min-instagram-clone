@@ -3,7 +3,7 @@
 export interface PostComments {
   postId: number,
   id: number,
-  name: string,
+  name?: string,
   email: string,
   body : string
 }
@@ -19,11 +19,13 @@ export interface PostProps {
 export interface Comment {
   postId: number,
   email: string,
-  body : string
+  body : string,
+  name?: string,
+  id: number,
 }
 
-export interface storageComments {
-  [postId : number ] : Comment[]
+export interface StorageComments {
+  [postId : number ] : Comment[] | undefined
 }
 
 

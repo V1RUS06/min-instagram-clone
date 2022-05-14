@@ -1,13 +1,12 @@
 import {useRouter} from "next/router";
 import styles from '../../styles/Post.module.css'
 import {GetServerSideProps} from "next";
-import {PostProps, PostComments, storageComments, Comment} from "../../types/Post";
+import {PostProps, PostComments, StorageComments, Comment} from "../../types/Post";
 import Link from "next/link";
 import CommentCard from "../../components/Card/CommentCard";
 import LeftArrow from "../../assents/svg/LeftArrow";
 import {CommentsArea} from "../../components/CommentsArea";
-import React, {FormEvent, useCallback, useEffect, useRef, useState} from "react";
-import {type} from "os";
+import React, {FormEvent, useCallback, useEffect, useState} from "react";
 
 
 interface Props {
@@ -18,61 +17,46 @@ interface Props {
 export default function Post({comments, post}: Props) {
   const router = useRouter();
   const postId = router.query.id;
-  const [newComment, setNewComment] = useState<string>('');
-  const [save, setSave] = useState(true);
-  const [firstSave, setFirstSave] = useState(true);
+  const [allComments, setAllComments] = useState<PostComments[]>(comments)
 
   useEffect(() => {
-    if (postId) {
-      if (firstSave) {
-        console.log('Первый блок')
-        const temps: storageComments = {
-          [+postId]: [
-            {
-              postId: +postId,
-              body: newComment,
-              email: 'Anonymous',
-            }
-          ]
-        }
-        if (newComment.length !== 0) {
-          localStorage.setItem('comments', JSON.stringify(temps))
-          setSave(true)
-          setFirstSave(false)
-        }
-      } else {
-        console.log('Второй блок')
-        const getComments = localStorage.getItem('comments')
-        if (getComments) {
-          const newPost: Comment = {
-            postId: +postId,
-            body: newComment,
-            email: 'Anonymous',
-          }
-          const commentsArray = JSON.parse(getComments);
+    const storageComments = localStorage.getItem('comments');
 
-          if (commentsArray.hasOwnProperty(+postId)) {
-            const old = commentsArray[+postId]
-            old.push(newPost)
-            localStorage.setItem('comments', JSON.stringify(old))
-            setSave(true)
-          }
-        }
-      }
+    if (storageComments && postId) {
+      const parseComments: StorageComments = JSON.parse(storageComments)
+      const oldComments = parseComments[+postId] || [];
+
+      setAllComments(prevState => [...prevState, ...oldComments])
     }
+  }, [postId]);
 
-  }, [newComment])
-  console.log('Save!>>', save)
 
   const onHandleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const comment = (e.currentTarget.elements.namedItem('textarea') as HTMLTextAreaElement).value;
+    const storageComments = localStorage.getItem('comments') ;
 
-    const comment = (e.currentTarget.elements.namedItem('textarea') as HTMLTextAreaElement).value
-    setNewComment(comment);
-    setSave(false)
-    console.log('Надо сохранить', save)
+    if (postId) {
+      const temps: Comment = {
+        postId: +postId,
+        body: comment,
+        email: 'Anonymous',
+        id: Math.floor(Math.random()* 10000),
+      }
 
-  }, [])
+      if (storageComments) {
+       const parseComments = JSON.parse(storageComments);
+        const prevStorageComments = parseComments[+postId] || [];
+        const nextComments = {...parseComments, [+postId]: [...prevStorageComments, temps ]}
+
+        localStorage.setItem('comments', JSON.stringify(nextComments))
+      } else {
+        const nextComments = {[+postId]: [temps]}
+        localStorage.setItem('comments', JSON.stringify(nextComments))
+      }
+      setAllComments(prevState => [...prevState, temps])
+    }
+  }, [ postId ])
 
   return (
     <div className={styles.container}>
@@ -84,7 +68,7 @@ export default function Post({comments, post}: Props) {
         <img className={styles.post_img} src={`${post.url}`} alt={`img${post.id}`}/>
         <div className={styles.comments_title}>Комментарии</div>
         <div className={styles.post_comments}>
-          {comments.map((elem: PostComments) => (
+          {allComments.map((elem: PostComments) => (
             <CommentCard email={elem.email} body={elem.body} key={elem.id}/>
           ))}
         </div>
