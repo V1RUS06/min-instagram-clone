@@ -7,6 +7,7 @@ import CommentCard from "../../components/Card/CommentCard";
 import LeftArrow from "../../assents/svg/LeftArrow";
 import {CommentsArea} from "../../components/CommentsArea";
 import React, {FormEvent, useCallback, useEffect, useState} from "react";
+import {CommentsList} from "../../components/CommentsList";
 
 
 interface Props {
@@ -17,46 +18,6 @@ interface Props {
 export default function Post({comments, post}: Props) {
   const router = useRouter();
   const postId = router.query.id;
-  const [allComments, setAllComments] = useState<PostComments[]>(comments)
-
-  useEffect(() => {
-    const storageComments = localStorage.getItem('comments');
-
-    if (storageComments && postId) {
-      const parseComments: StorageComments = JSON.parse(storageComments)
-      const oldComments = parseComments[+postId] || [];
-
-      setAllComments(prevState => [...prevState, ...oldComments])
-    }
-  }, [postId]);
-
-
-  const onHandleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const comment = (e.currentTarget.elements.namedItem('textarea') as HTMLTextAreaElement).value;
-    const storageComments = localStorage.getItem('comments') ;
-
-    if (postId) {
-      const temps: Comment = {
-        postId: +postId,
-        body: comment,
-        email: 'Anonymous',
-        id: Math.floor(Math.random()* 10000),
-      }
-
-      if (storageComments) {
-       const parseComments = JSON.parse(storageComments);
-        const prevStorageComments = parseComments[+postId] || [];
-        const nextComments = {...parseComments, [+postId]: [...prevStorageComments, temps ]}
-
-        localStorage.setItem('comments', JSON.stringify(nextComments))
-      } else {
-        const nextComments = {[+postId]: [temps]}
-        localStorage.setItem('comments', JSON.stringify(nextComments))
-      }
-      setAllComments(prevState => [...prevState, temps])
-    }
-  }, [ postId ])
 
   return (
     <div className={styles.container}>
@@ -64,16 +25,7 @@ export default function Post({comments, post}: Props) {
         <Link href={"/"}><a><LeftArrow/></a></Link>
         <h1>Пост номер {postId}</h1>
       </div>
-      <div className={styles.comments_container}>
-        <img className={styles.post_img} src={`${post.url}`} alt={`img${post.id}`}/>
-        <div className={styles.comments_title}>Комментарии</div>
-        <div className={styles.post_comments}>
-          {allComments.map((elem: PostComments) => (
-            <CommentCard email={elem.email} body={elem.body} key={elem.id}/>
-          ))}
-        </div>
-      </div>
-      <CommentsArea onSubmit={onHandleSubmit}/>
+      <CommentsList comments={comments} post={post} />
     </div>
   )
 }
