@@ -1,3 +1,5 @@
+
+
 export interface PostComments {
   postId: number,
   id: number,
@@ -13,3 +15,15 @@ export interface PostProps {
   url: string,
   thumbnailUrl: string
 }
+
+export interface Comment {
+  postId: number,
+  email: string,
+  body : string
+}
+
+export interface storageComments {
+  [postId : number ] : Comment[]
+}
+
+
