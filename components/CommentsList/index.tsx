@@ -17,6 +17,8 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
   const [comment, setComment] = useState<string>('');
   const localStorageLoaded = useRef<boolean>(false);
 
+  CommentsList.displayName = 'CommentsList';
+
   useEffect(() => {
       const storageComments = localStorage.getItem('comments');
 
