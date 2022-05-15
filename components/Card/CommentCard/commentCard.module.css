@@ -23,3 +23,14 @@
   padding: 0 10px;
 
 }
+@media (max-width: 425px) {
+  .email {
+    font-size: 14px;
+  }
+  .body {
+    font-size: 14px;
+  }
+  .comment_card span{
+    font-size: 14px;
+  }
+}

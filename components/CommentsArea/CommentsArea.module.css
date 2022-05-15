@@ -4,6 +4,7 @@
   padding: 0 10px;
   display: flex;
 }
+
 .container textarea {
   border: 1px solid gray;
   border-radius: 8px;
@@ -13,6 +14,7 @@
   font-size: 16px;
   resize: none;
 }
+
 .btn {
   border-radius: 8px;
   background-color: lightgrey;
@@ -21,4 +23,10 @@
   align-self: center;
   margin-left: 8px;
   cursor: pointer;
+}
+
+@media (max-width: 425px) {
+  .btn {
+    font-size: 12px;
+  }
 }
