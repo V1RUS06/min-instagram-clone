@@ -1,14 +1,11 @@
 import {useRouter} from "next/router";
 import styles from '../../styles/Post.module.css'
 import {GetServerSideProps} from "next";
-import {PostProps, PostComments, StorageComments, Comment} from "../../types/Post";
+import {PostProps, PostComments} from "../../types/Post";
 import Link from "next/link";
-import CommentCard from "../../components/Card/CommentCard";
 import LeftArrow from "../../assents/svg/LeftArrow";
-import {CommentsArea} from "../../components/CommentsArea";
-import React, {FormEvent, useCallback, useEffect, useState} from "react";
+import React from "react";
 import {CommentsList} from "../../components/CommentsList";
-
 
 interface Props {
   comments: PostComments[]

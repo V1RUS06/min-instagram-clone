@@ -1,7 +1,7 @@
 import styles from "./CommentsList.module.css";
 import {Comment, PostComments, PostProps, StorageComments} from "../../types/Post";
 import CommentCard from "../Card/CommentCard";
-import React, {FC, FormEvent, useCallback, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, FC, useCallback, useEffect, useRef, useState} from "react";
 import {CommentsArea} from "../CommentsArea";
 import {useRouter} from "next/router";
 
@@ -14,8 +14,8 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
   const router = useRouter();
   const postId = router.query.id;
   const [allComments, setAllComments] = useState<PostComments[]>(comments)
-  const localStorageLoaded = useRef<boolean>(false)
-
+  const [comment, setComment] = useState<string>('');
+  const localStorageLoaded = useRef<boolean>(false);
 
   useEffect(() => {
       const storageComments = localStorage.getItem('comments');
@@ -25,15 +25,15 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
         const oldComments = parseComments[+postId] || [];
 
         localStorageLoaded.current = true
-
         setAllComments(prevState => [...prevState, ...oldComments])
       }
-  }, [postId]);
+  }, [postId, localStorageLoaded]);
 
+  const onHandleChange = useCallback((e : ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value)
+  },[])
 
-  const onHandleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const comment = (e.currentTarget.elements.namedItem('textarea') as HTMLTextAreaElement).value;
+  const onHandleClick = useCallback(() => {
     const storageComments = localStorage.getItem('comments') ;
 
     if (postId) {
@@ -56,7 +56,11 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
       }
       setAllComments(prevState => [...prevState, temps])
     }
-  }, [ postId ])
+    setComment('');
+  }, [ postId, comment ])
+
+
+
 
   return (
     <div className={styles.comments_container}>
@@ -67,7 +71,7 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
           <CommentCard email={elem.email} body={elem.body} key={elem.id}/>
         ))}
       </div>
-      <CommentsArea onSubmit={onHandleSubmit}/>
+      <CommentsArea onChange={onHandleChange} onClick={onHandleClick} value={comment}/>
     </div>
   );
 });

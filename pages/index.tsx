@@ -18,7 +18,7 @@ const Posts:NextPage<Props> = ({serverPosts, pages}) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [fetching, setFetching] = useState<boolean>(false);
   const dispatch: Dispatch<PostsAction> = useDispatch();
-  const {posts, loading, totalPages} = useTypedSelector(state => state.posts);
+  const {posts, loading} = useTypedSelector(state => state.posts);
   const { fetchPosts } = useActions()
   const router = useRouter();
 

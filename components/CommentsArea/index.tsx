@@ -1,24 +1,24 @@
 import styles from './CommentsArea.module.css'
-import React, {FC, FormEvent, useState} from "react";
+import React, {ChangeEvent, FC, MouseEventHandler} from "react";
 
 interface Props {
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
+  onClick: MouseEventHandler<HTMLButtonElement>
+  value: string
 }
 
-export const CommentsArea: FC<Props> = ({onSubmit}) => {
-  const [value, setValue] = useState('')
+export const CommentsArea: FC<Props> = ({onChange, onClick, value}) => {
 
   return (
-      <form onSubmit={onSubmit} className={styles.container}>
+      <div className={styles.container}>
         <textarea
           placeholder="Оставить комментарий..."
           maxLength={100}
-          onChange={e => setValue(e.target.value)}
+          onChange={onChange}
           value={value}
-          name={'textarea'}
         />
-        <button className={styles.btn}>Отправить</button>
-      </form>
+        <button className={styles.btn} onClick={onClick}>Отправить</button>
+      </div>
   );
 };
 
