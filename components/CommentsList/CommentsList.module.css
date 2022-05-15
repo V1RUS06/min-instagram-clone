@@ -9,7 +9,8 @@
   max-width: 600px;
 }
 .post_comments{
-  margin: 0 10px
+  margin: 0 10px;
+  width: 100%;
 }
 .comments_title {
   display: inline-flex;
