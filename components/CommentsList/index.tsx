@@ -1,7 +1,7 @@
 import styles from "./CommentsList.module.css";
 import {Comment, PostComments, PostProps, StorageComments} from "../../types/Post";
 import CommentCard from "../Card/CommentCard";
-import React, {FC, FormEvent, useCallback, useEffect, useState} from "react";
+import React, {FC, FormEvent, useCallback, useEffect, useRef, useState} from "react";
 import {CommentsArea} from "../CommentsArea";
 import {useRouter} from "next/router";
 
@@ -14,13 +14,17 @@ export const CommentsList: FC<Props> = React.memo(({post, comments}) => {
   const router = useRouter();
   const postId = router.query.id;
   const [allComments, setAllComments] = useState<PostComments[]>(comments)
+  const localStorageLoaded = useRef<boolean>(false)
+
 
   useEffect(() => {
       const storageComments = localStorage.getItem('comments');
 
-      if (storageComments && postId) {
+      if (storageComments && postId && !localStorageLoaded.current) {
         const parseComments: StorageComments = JSON.parse(storageComments)
         const oldComments = parseComments[+postId] || [];
+
+        localStorageLoaded.current = true
 
         setAllComments(prevState => [...prevState, ...oldComments])
       }
