@@ -29,4 +29,7 @@
   .btn {
     font-size: 12px;
   }
+  .container textarea{
+    font-size: 14px;
+  }
 }
