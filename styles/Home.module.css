@@ -4,8 +4,6 @@
 
 .main {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
@@ -27,9 +25,13 @@
 .flex_container::-webkit-scrollbar {
   display: none;
 }
+.flex_container a {
+  display: flex;
+  flex-direction: column;
+  width: calc(33.33% - 5px);
+}
 
 .card {
-  width: calc(33.33% - 5px);
   cursor: pointer;
   transition: opacity .6s ease-out;
   opacity: 1;

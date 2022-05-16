@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import {Dispatch} from "redux";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {useActions} from "../hooks/useAction";
+import Link from 'next/link';
 
 interface Props {
   serverPosts: CardData[],
@@ -42,9 +43,6 @@ const Posts:NextPage<Props> = ({serverPosts, pages}) => {
     dispatch({type: PostsActionType.SET_POSTS, payload: serverPosts})
   }, []);
 
-  const onClickCard = (imgId: number) => {
-    router.push(`post/${imgId}`)
-  }
 
   const scrollHandler = useCallback((e: React.UIEvent<HTMLDivElement>) => {
 
@@ -66,12 +64,15 @@ const Posts:NextPage<Props> = ({serverPosts, pages}) => {
       <main className={styles.main}>
         <div className={styles.flex_container} ref={scrollContainer} onScroll={scrollHandler}>
           {posts.map((item: CardData) => (
-              <img
-                key={item.id}
-                src={`${item.url}`} alt={`post${item.id}`}
-                className={styles.card}
-                onClick={() => onClickCard(item.id)}
-              />
+            <Link href={`post/${item.id}`}>
+              <a>
+                <img
+                  key={item.id}
+                  src={`${item.url}`} alt={`post${item.id}`}
+                  className={styles.card}
+                />
+              </a>
+            </Link>
             )
           )}
         </div>
